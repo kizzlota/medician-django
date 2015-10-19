@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='user_details',
-            field=models.ForeignKey(to='profiles.UserAddress'),
+            field=models.ForeignKey(default=1, to='profiles.UserAddress'),
         ),
         migrations.AddField(
             model_name='user',
