@@ -27,6 +27,10 @@ urlpatterns = [
    # url(r'^$', 'profiles.views.registration', name='registration'),
     url(r'^', include(router.urls)),
     url(r'^api/account/registration/', views.AccountViewSet.as_view({'post': 'create'})),
+    url(r'^api/account/login/', views.AccountLogin.as_view({'post': 'login'})),
     url(r'^tester/', 'profiles.views.tester', name='tester'),
+    url(r'^tester2/', 'profiles.views.tester2', name='tester2'),
+    url(r'^tester3/', 'profiles.views.tester3', name='tester3'),
+
 
 ]

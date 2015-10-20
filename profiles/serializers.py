@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
 import re
-from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from profiles.models import User
 from django.core import validators
-from models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -16,9 +13,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=30,
+                                     validators=[
+                                         validators.RegexValidator(re.compile('^[\w.@+-]+$'), 'Enter a valid username.',
+                                                                   'invalid'),
+                                         UniqueValidator(queryset=User.objects.all(),
+                                                         message='This username already exists.')]
+                                     )
     email = serializers.CharField(max_length=30,
                                   validators=[
-
                                       UniqueValidator(queryset=User.objects.all(),
                                                       message='User with this Email address already exists.'),
                                       validators.EmailValidator()]

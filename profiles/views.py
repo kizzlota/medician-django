@@ -15,6 +15,7 @@ from profiles.serializers import *
 from rest_framework.response import Response
 from rest_framework import status
 
+
 # from profiles.mailing import send_email
 # Create your views here.
 
@@ -31,22 +32,55 @@ class AccountViewSet(viewsets.ViewSet):
 	# authentication_classes = (JSONWebTokenAuthentication, )
 
 	def create(self, request):
+
 		serializer = AccountSerializer(data=request.data)
 		if serializer.is_valid():
+
+			username = serializer.data['username']
 			email = serializer.data['email']
 			password = serializer.data['password']
 
 			# Creating an user entry
 
-			user = get_user_model().objects.create_user(email=email)
+			user = get_user_model().objects.create_user(username=username)
 			user.set_password(password)
-			user.email = None
+			user.email = email
 			user.save()
 
-			return Response(user, status=status.HTTP_201_CREATED)
+			user1 = authenticate(username=username, password=password)
+			if user1 is not None:
+				login(request, user1)
+
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AccountLogin(viewsets.ViewSet):
+	permission_classes = (AllowAny,)
+	# authentication_classes = (JSONWebTokenAuthentication, )
+
+	def login(self, request):
+		serializer = AccountLoginSerializer(data=request.data)
+		if serializer.is_valid():
+			username = serializer.data['username']
+			password = serializer.data['password']
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				login(request, user)
+
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			else:
+				return Response({'error': 'The username or password was incorrect.'},
+				                status=status.HTTP_400_BAD_REQUEST)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def tester(request):
 	return render(request, 'main/test.html')
 
+
+def tester2(request):
+	return render(request, 'main/tester2.html')
+
+def tester3(request):
+	return render(request, 'main/user_login.html')
