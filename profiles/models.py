@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import get_user_model
 import uuid
 import os
+from django.conf import settings
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -117,4 +119,4 @@ class UserBioDetails(models.Model):
     bad_habits = models.TextField(max_length=200, blank=True, null=True)
     special_nutrition = models.TextField(max_length=200, blank=True, null=True)
     user_additional_comments = models.TextField(max_length=500, blank=True, null=True)
-    relation_to_user = models.ForeignKey(User)
+    relation_to_user = models.ForeignKey(settings.AUTH_USER_MODEL)

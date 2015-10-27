@@ -28,6 +28,8 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/account/registration/', views.AccountViewSet.as_view({'post': 'create'})),
     url(r'^api/account/login/', views.AccountLogin.as_view({'post': 'login'})),
+    url(r'^api/account/user_details/', views.UserQuestionnaireViewSet.as_view({'get': 'list'})),
+    url(r'^api/account/add/user_details/', views.UserQuestionnaireViewSet.as_view({'post': 'create', 'get': 'list'})),
     url(r'^tester/', 'profiles.views.tester', name='tester'),
     url(r'^tester2/', 'profiles.views.tester2', name='tester2'),
     url(r'^tester3/', 'profiles.views.tester3', name='tester3'),
