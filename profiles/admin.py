@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import User, UserBioDetails
+from models import User, UserBioDetails, UserAnalyzes, UserFiles, UserActivity
 # Register your models here.
 
 @admin.register(User)
@@ -13,3 +13,19 @@ class UserBioDetailsAdmin(admin.ModelAdmin):
 	                'allegric_history', 'medicinal_intolerance', 'vaccinations', 'previous_diagnosis', 'height', 'weight',
 	                'sport_life', 'bad_habits', 'special_nutrition', 'user_additional_comments']
 
+@admin.register(UserAnalyzes)
+class UserAnalyzesAdmin(admin.ModelAdmin):
+	list_display = [
+		'id','date_of_analyzes', 'title_analyzes', 'everything_data', 'relation_to_user_files'
+	]
+
+@admin.register(UserFiles)
+class UserFilesAdmin(admin.ModelAdmin):
+	list_display = [
+		'id','file', 'date_of_add', 'name_file'
+	]
+@admin.register(UserActivity)
+class UserActivityAdmin(admin.ModelAdmin):
+	list_display = [
+		'id', 'relation_to_user_bio', 'relation_to_analyzes', 'relation_to_user'
+	]

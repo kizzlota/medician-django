@@ -57,7 +57,7 @@ ROOT_URLCONF = 'medician.urls'
 
 AUTH_USER_MODEL = 'profiles.User'
 
-TEMPLATES = [
+TEMPLATE_DIRS = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR,  'templates')],
