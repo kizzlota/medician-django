@@ -148,3 +148,21 @@ class UserActivity(models.Model):
 
 	def relation_to_analyzes(self):
 		return self.relation_to_user_analyzes.all()
+
+
+class DocCategories(models.Model):
+	name = models.CharField(blank=True, null=True, max_length=150)
+	list_of_diseases = models.CharField(blank=True, null=True, max_length=250)
+
+class DocProfile(models.Model):
+	name = models.CharField(max_length=100)
+	second_name = models.CharField(max_length=100)
+	surname = models.CharField(max_length=100)
+	photo = models.CharField(max_length=100)
+	place_of_work = models.CharField(max_length=200)
+	description = models.TextField(max_length=1000, blank=True, null=True)
+	education = models.TextField(max_length=1000, blank=True, null=True)
+	status = models.BooleanField(default=False)
+	cost = models.IntegerField(default=0)
+	certificates = JSONField()
+	experience = models.CharField(blank=True, null=True, max_length=200)
