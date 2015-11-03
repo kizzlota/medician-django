@@ -1,12 +1,11 @@
 from django.contrib import admin
-from models import User, UserBioDetails, UserAnalyzes, UserFiles, UserActivity
+from models import User, UserBioDetails, UserAnalyzes, UserFiles, UserActivity, DocCategories, DocProfile
 # Register your models here.
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
 	list_display = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined',
 	                'profile_image']
-
 
 @admin.register(UserBioDetails)
 class UserBioDetailsAdmin(admin.ModelAdmin):
@@ -37,4 +36,17 @@ class UserFilesAdmin(admin.ModelAdmin):
 class UserActivityAdmin(admin.ModelAdmin):
 	list_display = [
 		'id', 'relation_to_user_bio', 'relation_to_analyzes', 'relation_to_user'
+	]
+
+@admin.register(DocCategories)
+class DocCategoriesAdmin(admin.ModelAdmin):
+	list_display = [
+		'id', 'name'
+	]
+
+@admin.register(DocProfile)
+class DocProfileAdmin(admin.ModelAdmin):
+	list_display = [
+		'id', 'name', 'second_name', 'surname', 'photo', 'place_of_work', 'description', 'education', 'status', 'cost',
+		'certificates', 'experience'
 	]

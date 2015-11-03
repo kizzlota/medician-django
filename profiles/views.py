@@ -81,7 +81,7 @@ class AccountLogin(viewsets.ViewSet):
             if user is not None:
                 login(request, user)
 
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'The username or password was incorrect.'},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -101,8 +101,6 @@ class UserQuestionnaireViewSet(viewsets.ViewSet):
         return Response(data)
 
     def create(self, request):
-        print request.user.id
-        print request.data.__dict__
         serializer = UserBioDetailsSerializerAdd(data=request.data)
         if serializer.is_valid():
             serializer.save()

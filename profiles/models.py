@@ -137,6 +137,9 @@ class UserAnalyzes(models.Model):
 	def relation_to_user_files(self):
 		return self.relation_to_files.all()
 
+	def __unicode__(self):
+		return self.date_of_analyzes
+
 
 class UserActivity(models.Model):
 	relation_to_user = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -152,7 +155,10 @@ class UserActivity(models.Model):
 
 class DocCategories(models.Model):
 	name = models.CharField(blank=True, null=True, max_length=150)
-	list_of_diseases = models.CharField(blank=True, null=True, max_length=250)
+	link_to_profile = models.URLField(blank=True, null=True)
+
+	def __unicode__(self):
+		return self.name
 
 class DocProfile(models.Model):
 	name = models.CharField(max_length=100)
@@ -166,3 +172,15 @@ class DocProfile(models.Model):
 	cost = models.IntegerField(default=0)
 	certificates = JSONField()
 	experience = models.CharField(blank=True, null=True, max_length=200)
+	list_of_diseases = JSONField(blank=True, null=True)
+	relation_to_user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+	relation_to_doc_categories = models.ManyToManyField(DocCategories)
+
+	def relation_to_doctor_cats(self):
+		return self.relation_to_doc_categories.all()
+
+	def __unicode__(self):
+		return self.name
+
+
+
