@@ -29,12 +29,39 @@ class UserManager(BaseUserManager):
 		return user
 
 
+def get_file_path(instance, filename):
+	ext = filename.split('.')[-1]
+	filename = "%s.%s" % (uuid.uuid4(), ext)
+	return os.path.join('user_image', filename)
+
+
 class UserAddress(models.Model):
 	phone = models.CharField(max_length=100, blank=True, null=True)
 	address = models.CharField(max_length=150, blank=True, null=True)
 	city = models.CharField(max_length=150, blank=True, null=True)
 	street = models.CharField(max_length=150, blank=True, null=True)
 	country = models.CharField(max_length=50, blank=True, null=True)
+
+
+
+class UserFiles(models.Model):
+	file = models.FileField(blank=True, null=True, upload_to=get_file_path,
+	                        default="/static/img/defaultuserimage.jpeg")
+	date_of_add = models.DateField(auto_now_add=True)
+	name_file = models.CharField(blank=True, null=True, max_length=100)
+
+
+class UserAnalyzes(models.Model):
+	date_of_analyzes = models.DateField(auto_now=True)
+	title_analyzes = models.TextField(blank=True, null=True)
+	everything_data = JSONField()
+	relation_to_files = models.ManyToManyField(UserFiles)
+
+	def relation_to_user_files(self):
+		return self.relation_to_files.all()
+
+	def __unicode__(self):
+		return self.title_analyzes
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -60,6 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	user_bio = models.TextField(max_length=1200, blank=True)
 
 	user_details = models.ForeignKey(UserAddress, blank=True, null=True)
+	relation_to_user_analyzes = models.ManyToManyField(UserAnalyzes, blank=True, null=True)
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email']
@@ -85,28 +113,23 @@ class RegistrationCode(models.Model):
 	date = models.DateTimeField(auto_now_add=True)
 
 
-def get_file_path(instance, filename):
-	ext = filename.split('.')[-1]
-	filename = "%s.%s" % (uuid.uuid4(), ext)
-	return os.path.join('user_image', filename)
-
 
 class UserBioDetails(models.Model):
 	avatar = models.ImageField(blank=True, null=True, upload_to=get_file_path,
 	                           default="/static/img/defaultuserimage.jpeg")
-	name = models.CharField(max_length=100)
-	second_name = models.CharField(max_length=100)
-	surname = models.CharField(max_length=100)
+	name = models.CharField(max_length=100, blank=True, null=True)
+	second_name = models.CharField(max_length=100, blank=True, null=True)
+	surname = models.CharField(max_length=100, blank=True, null=True)
 	ident_code = models.IntegerField(blank=True, null=True)
-	sex = models.CharField(max_length=10)
-	birthday = models.DateField()
+	sex = models.CharField(max_length=10, blank=True, null=True)
+	birthday = models.DateField(auto_now_add=True)
 	telephone_number = models.CharField(max_length=15, blank=True, null=True)
 	address = models.CharField(max_length=250, blank=True, null=True)
 	invalidity = models.CharField(max_length=200, blank=True, null=True)
 	blood_type = models.IntegerField(blank=True, null=True)
-	rh_factor = models.BooleanField()
-	blood_transfusion = models.BooleanField()
-	diabetes = models.BooleanField()
+	rh_factor = models.NullBooleanField(blank=True, null=True)
+	blood_transfusion = models.NullBooleanField(blank=True, null=True)
+	diabetes = models.NullBooleanField(blank=True, null=True)
 	infections_diseases = models.TextField(max_length=500, blank=True, null=True)
 	surgery = models.TextField(max_length=500, blank=True, null=True)
 	allegric_history = models.TextField(max_length=500, blank=True, null=True)
@@ -119,38 +142,10 @@ class UserBioDetails(models.Model):
 	bad_habits = models.TextField(max_length=200, blank=True, null=True)
 	special_nutrition = models.TextField(max_length=200, blank=True, null=True)
 	user_additional_comments = models.TextField(max_length=500, blank=True, null=True)
-
-
-class UserFiles(models.Model):
-	file = models.FileField(blank=True, null=True, upload_to=get_file_path,
-	                        default="/static/img/defaultuserimage.jpeg")
-	date_of_add = models.DateField(auto_now_add=True)
-	name_file = models.CharField(blank=True, null=True, max_length=100)
-
-
-class UserAnalyzes(models.Model):
-	date_of_analyzes = models.DateField(auto_now=True)
-	title_analyzes = models.TextField(blank=True, null=True)
-	everything_data = JSONField()
-	relation_to_files = models.ManyToManyField(UserFiles)
-
-	def relation_to_user_files(self):
-		return self.relation_to_files.all()
+	relation_to_user = models.ForeignKey(User)
 
 	def __unicode__(self):
-		return self.date_of_analyzes
-
-
-class UserActivity(models.Model):
-	relation_to_user = models.ForeignKey(settings.AUTH_USER_MODEL)
-	relation_to_bio_details = models.ManyToManyField(UserBioDetails)
-	relation_to_user_analyzes = models.ManyToManyField(UserAnalyzes)
-
-	def relation_to_user_bio(self):
-		return self.relation_to_bio_details.all()
-
-	def relation_to_analyzes(self):
-		return self.relation_to_user_analyzes.all()
+		return self.name
 
 
 class DocCategories(models.Model):
@@ -159,6 +154,7 @@ class DocCategories(models.Model):
 
 	def __unicode__(self):
 		return self.name
+
 
 class DocProfile(models.Model):
 	name = models.CharField(max_length=100)
@@ -181,6 +177,3 @@ class DocProfile(models.Model):
 
 	def __unicode__(self):
 		return self.name
-
-
-

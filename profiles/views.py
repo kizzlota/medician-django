@@ -104,6 +104,7 @@ class UserQuestionnaireViewSet(viewsets.ViewSet):
         serializer = UserBioDetailsSerializerAdd(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -119,3 +120,7 @@ def tester2(request):
 
 def tester3(request):
     return render(request, 'main/user_login.html')
+
+
+
+

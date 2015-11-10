@@ -51,20 +51,21 @@ class UserBioDetailsSerializer(serializers.HyperlinkedModelSerializer):
     avatar = serializers.HyperlinkedIdentityField('avatar')
 
     class Meta:
-		model = UserBioDetails
-		fields = (
+        model = UserBioDetails
+        fields = (
             'avatar', 'name', 'second_name', 'surname', 'ident_code', 'sex', 'birthday', 'telephone_number', 'address',
             'invalidity', 'blood_type', 'rh_factor', 'blood_transfusion', 'diabetes', 'infections_diseases', 'surgery',
             'allegric_history', 'medicinal_intolerance', 'vaccinations', 'previous_diagnosis', 'height', 'weight',
             'sport_life', 'bad_habits', 'special_nutrition', 'user_additional_comments', 'relation_to_user_model'
         )
 
+
 class UserBioDetailsSerializerAdd(serializers.ModelSerializer):
     class Meta:
-		model = UserBioDetails
-		fields = (
+        model = UserBioDetails
+        fields = (
             'avatar', 'name', 'second_name', 'surname', 'ident_code', 'sex', 'birthday', 'telephone_number', 'address',
             'invalidity', 'blood_type', 'rh_factor', 'blood_transfusion', 'diabetes', 'infections_diseases', 'surgery',
             'allegric_history', 'medicinal_intolerance', 'vaccinations', 'previous_diagnosis', 'height', 'weight',
-            'sport_life', 'bad_habits', 'special_nutrition', 'user_additional_comments', 'relation_to_user_model'
+            'sport_life', 'bad_habits', 'special_nutrition', 'user_additional_comments'
         )

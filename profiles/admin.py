@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import User, UserBioDetails, UserAnalyzes, UserFiles, UserActivity, DocCategories, DocProfile
+from models import User, UserBioDetails, UserAnalyzes, UserFiles, DocCategories, DocProfile
 # Register your models here.
 
 @admin.register(User)
@@ -31,12 +31,6 @@ class UserFilesAdmin(admin.ModelAdmin):
 		'id', 'file', 'date_of_add', 'name_file'
 	]
 
-
-@admin.register(UserActivity)
-class UserActivityAdmin(admin.ModelAdmin):
-	list_display = [
-		'id', 'relation_to_user_bio', 'relation_to_analyzes', 'relation_to_user'
-	]
 
 @admin.register(DocCategories)
 class DocCategoriesAdmin(admin.ModelAdmin):
