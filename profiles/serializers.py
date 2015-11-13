@@ -2,7 +2,7 @@ import re
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from profiles.models import User, UserBioDetails
+from profiles.models import User, UserBioDetails, UserAddress
 from django.core import validators
 
 
@@ -69,3 +69,9 @@ class UserBioDetailsSerializerAdd(serializers.ModelSerializer):
             'allegric_history', 'medicinal_intolerance', 'vaccinations', 'previous_diagnosis', 'height', 'weight',
             'sport_life', 'bad_habits', 'special_nutrition', 'user_additional_comments', 'relation_to_user'
         )
+
+
+class UserAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAddress
+        fields = ('phone', 'address', 'city', 'street', 'country')

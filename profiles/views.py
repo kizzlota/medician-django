@@ -135,6 +135,8 @@ class UserQuestionnaireViewSet(viewsets.ViewSet):
 
 
 
+class UserAddressViewSet(viewsets.ViewSet):
+	pass
 
 def tester(request):
 	return render(request, 'main/test.html')
