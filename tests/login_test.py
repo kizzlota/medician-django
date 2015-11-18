@@ -57,14 +57,22 @@ class AccountTests(APITestCase):
         self.client.login(username='DabApps', password='pass')
         response = self.client.post(url1, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response_data = {'previous_diagnosis': None, 'surname': None, 'weight': None, 'sex': None,
-                         'allegric_history': None, 'surgery': None, 'sport_life': None, 'special_nutrition': None,
-                         'user_additional_comments': None, 'blood_type': None, 'relation_to_user': 1,
-                         'invalidity': None, 'bad_habits': None, 'birthday': '2015-11-13', 'vaccinations': None,
-                         'address': u'Kyiv', 'height': None, 'diabetes': None, 'infections_diseases': None,
-                         'name': u'DabApps', 'medicinal_intolerance': None, 'ident_code': None,
-                         'blood_transfusion': None, 'telephone_number': u'123',
-                         'avatar': '/static/img/defaultuserimage.jpeg', 'rh_factor': None, 'second_name': None}
+        response_data = 'Kyiv'
 
-        self.assertEqual(response.data, response_data)
+        self.assertEqual(response.data['address'], response_data)
+
+    def test_user_adress(self):
+        user = get_user_model().objects.create_user(username='DabApps', email='test@test.com')
+        user.set_password('pass')
+        user.save()
+        url = reverse('user_address')
+        self.client.login(username='DabApps', password='pass')
+        user_address = UserAddress.objects.create(phone='123', city='ternopil')
+        user_address.save()
+        data = {'phone': '12345', 'city': 'Ternopil'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+
 

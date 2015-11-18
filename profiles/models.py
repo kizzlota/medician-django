@@ -42,6 +42,9 @@ class UserAddress(models.Model):
 	street = models.CharField(max_length=150, blank=True, null=True)
 	country = models.CharField(max_length=50, blank=True, null=True)
 
+	def __unicode__(self):
+		return self.phone
+
 
 
 class UserFiles(models.Model):
@@ -50,25 +53,27 @@ class UserFiles(models.Model):
 	date_of_add = models.DateField(auto_now_add=True)
 	name_file = models.CharField(blank=True, null=True, max_length=100)
 
+	def __unicode__(self):
+		return '%s, %s' % (self.name_file, self.date_of_add)
 
 class UserAnalyzes(models.Model):
 	date_of_analyzes = models.DateField(auto_now=True)
 	title_analyzes = models.TextField(blank=True, null=True)
 	everything_data = JSONField()
-	relation_to_files = models.ManyToManyField(UserFiles)
+	relation_to_files = models.ManyToManyField(UserFiles, verbose_name='relation filed to UserFiles by m2m')
 
 	def relation_to_user_files(self):
 		return self.relation_to_files.all()
 
 	def __unicode__(self):
-		return self.title_analyzes
+		return '%s, %s' %(self.title_analyzes, self.date_of_analyzes)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
 	username = models.CharField(max_length=50, unique=True,
 	                            help_text=_(
 		                            'Required. 30 characters or fewer. Letters, numbers and @/./+/-/_ characters'))
-	email = models.EmailField(max_length=255, unique=True, null=True)
+	email = models.EmailField(max_length=255, unique=True, null=True, verbose_name='e-mail')
 	first_name = models.CharField(max_length=30, blank=True, null=True)
 	last_name = models.CharField(max_length=30, blank=True, null=True)
 	is_staff = models.BooleanField(default=False,
@@ -117,7 +122,7 @@ class RegistrationCode(models.Model):
 class UserBioDetails(models.Model):
 	avatar = models.ImageField(blank=True, null=True, upload_to=get_file_path,
 	                           default="/static/img/defaultuserimage.jpeg")
-	name = models.CharField(max_length=100, blank=True, null=True)
+	name = models.CharField(max_length=100, blank=True, null=True, verbose_name='full user name')
 	second_name = models.CharField(max_length=100, blank=True, null=True)
 	surname = models.CharField(max_length=100, blank=True, null=True)
 	ident_code = models.IntegerField(blank=True, null=True)
@@ -142,7 +147,7 @@ class UserBioDetails(models.Model):
 	bad_habits = models.TextField(max_length=200, blank=True, null=True)
 	special_nutrition = models.TextField(max_length=200, blank=True, null=True)
 	user_additional_comments = models.TextField(max_length=500, blank=True, null=True)
-	relation_to_user = models.ForeignKey(User)
+	relation_to_user = models.ForeignKey(User, verbose_name='relation field to User model by FK')
 
 	def __unicode__(self):
 		return self.name

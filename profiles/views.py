@@ -84,7 +84,7 @@ class AccountLogin(viewsets.ViewSet):
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			else:
 				return Response({'error': 'The username or password was incorrect.'},
-								status=status.HTTP_400_BAD_REQUEST)
+				                status=status.HTTP_400_BAD_REQUEST)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -136,7 +136,26 @@ class UserQuestionnaireViewSet(viewsets.ViewSet):
 
 
 class UserAddressViewSet(viewsets.ViewSet):
-	pass
+	permission_classes = (IsAuthenticated,)
+
+	def list(self, request):
+		queryset = UserAddress.objects.filter(id=request.user.id)
+		serializer = UserAddressSerializer(queryset, many=True)
+		data = {
+			'all_data': serializer.data,
+		}
+		return Response(data)
+
+	def create(self, request):
+		queryset = UserAddress.objects.filter(id=request.user.id)
+		serializer = UserAddressSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 def tester(request):
 	return render(request, 'main/test.html')
