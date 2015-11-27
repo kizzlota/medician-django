@@ -56,11 +56,12 @@ class UserFiles(models.Model):
 	def __unicode__(self):
 		return '%s, %s' % (self.name_file, self.date_of_add)
 
+
 class UserAnalyzes(models.Model):
 	date_of_analyzes = models.DateField(auto_now=True)
 	title_analyzes = models.TextField(blank=True, null=True)
 	everything_data = JSONField()
-	relation_to_files = models.ManyToManyField(UserFiles, verbose_name='relation filed to UserFiles by m2m')
+	relation_to_files = models.ManyToManyField(UserFiles, blank=True, null=True, verbose_name='relation filed to UserFiles by m2m')
 
 	def relation_to_user_files(self):
 		return self.relation_to_files.all()

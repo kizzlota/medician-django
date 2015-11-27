@@ -6,6 +6,7 @@ from profiles.serializers import *
 from rest_framework.test import force_authenticate
 import json
 from rest_framework.test import APIRequestFactory
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class AccountTests(APITestCase):
@@ -49,29 +50,34 @@ class AccountTests(APITestCase):
         user = get_user_model().objects.create_user(username='DabApps', email='test@test.com')
         user.set_password('pass')
         user.save()
-        url = reverse('user_details')
         user_bio = UserBioDetails.objects.create(address='Ternopil', name='user1', relation_to_user=user)
         user_bio.save()
-        url1 = '/api/account/add/user_details/{0}/'.format(user_bio.id)
-        data = {'name': 'DabApps', 'telephone_number': '123', 'address': 'Kyiv', 'relation_to_user' : user.id}
+        url1 = '/api/account/user_details/{0}/'.format(user_bio.id)
+        data = {'name': 'DabApps', 'telephone_number': '123', 'address': 'Kyiv', 'relation_to_user': user.id}
         self.client.login(username='DabApps', password='pass')
         response = self.client.post(url1, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_data = 'Kyiv'
-
         self.assertEqual(response.data['address'], response_data)
 
     def test_user_adress(self):
         user = get_user_model().objects.create_user(username='DabApps', email='test@test.com')
         user.set_password('pass')
         user.save()
-        url = reverse('user_address')
+        user_bio = UserAddress.objects.create(address='Ternopil', phone='1234123')
+        url1 = '/api/account/user_address/{0}/'.format(user_bio.id)
         self.client.login(username='DabApps', password='pass')
         user_address = UserAddress.objects.create(phone='123', city='ternopil')
         user_address.save()
         data = {'phone': '12345', 'city': 'Ternopil'}
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url1, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response_data = '12345'
+        self.assertEqual(response.data['phone'], response_data)
+
+    def test_upload_file(self):
+	    video = SimpleUploadedFile('sample.mp4', 'file_content', content_type='video/mp4')
+	    self.client.post()
 
 
 
