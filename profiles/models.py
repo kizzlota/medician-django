@@ -50,7 +50,7 @@ class UserAddress(models.Model):
 class UserFiles(models.Model):
 	file = models.FileField(blank=True, null=True, upload_to=get_file_path,
 	                        default="/static/img/defaultuserimage.jpeg")
-	date_of_add = models.DateField(auto_now_add=True)
+	date_of_add = models.DateField(auto_now_add=True, blank=True, null=True)
 	name_file = models.CharField(blank=True, null=True, max_length=100)
 
 	def __unicode__(self):

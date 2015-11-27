@@ -6,7 +6,9 @@ from profiles.serializers import *
 from rest_framework.test import force_authenticate
 import json
 from rest_framework.test import APIRequestFactory
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile, InMemoryUploadedFile
+import StringIO
+from PIL import Image
 
 
 class AccountTests(APITestCase):
@@ -75,10 +77,43 @@ class AccountTests(APITestCase):
         response_data = '12345'
         self.assertEqual(response.data['phone'], response_data)
 
-    def test_upload_file(self):
-	    video = SimpleUploadedFile('sample.mp4', 'file_content', content_type='video/mp4')
-	    self.client.post()
 
 
+def get_temporary_image():
+    io = StringIO.StringIO()
+    size = (200, 200)
+    color = (255, 0, 0, 0)
+    image = Image.new("RGBA", size, color)
+    image.save(io, format='JPEG')
+    image_file = InMemoryUploadedFile(io, None, 'foo.jpg', 'jpeg', io.len, None)
+    image_file.seek(0)
+    return image_file
+
+def get_temporary_text_file():
+    io = StringIO.StringIO()
+    io.write('foo')
+    text_file = InMemoryUploadedFile(io, None, 'foo.txt', 'text', io.len, None)
+    text_file.seek(0)
+    return text_file
 
 
+class FileUploadTests(APITestCase):
+
+    def test_if_form_submits(self):
+        user = get_user_model().objects.create_user(username='DabApps', email='test@test.com')
+        user.set_password('pass')
+        user.save()
+        self.client.login(username='DabApps', password='pass')
+        file = get_temporary_image()
+        url = '/api/account/user_details/'
+        response = self.client.post(url, {'file': file, 'name_file':'some_file'})
+        print(response)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+    # def test_if_form_fails_on_text_file(self):
+    #     file = get_temporary_text_file()
+    #     response = self.client.post(reverse('user_files'), {'image': file})
+    #     self.assertEqual(200, response.status_code)
+    #     error_message = 'Upload a valid image. The file you uploaded was either not an image or a corrupted image.'
+    #     self.assertFormError(response, 'form', 'image', error_message)
