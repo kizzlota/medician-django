@@ -152,7 +152,7 @@ class UserAddressViewSet(viewsets.ViewSet):
 			except UserAddress.DoesNotExist, e:
 				return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		else:
-			queryset = UserAddress.objects.filter(name=request.user.id)
+			queryset = UserAddress.objects.filter(id=request.user.id)
 			serializer = UserAddressSerializer(queryset, many=True)
 			data = {
 				'all_data': serializer.data,
@@ -160,12 +160,15 @@ class UserAddressViewSet(viewsets.ViewSet):
 			return Response(data)
 
 	def create(self, request, id=None):
-		try:
-			instance = UserAddress.objects.get(id=id)
-		except UserAddress.DoesNotExist, e:
-			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		if id:
+			try:
+				instance = UserAddress.objects.get(id=id)
+			except UserAddress.DoesNotExist, e:
+				return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-		serializer = UserAddressSerializer(instance=instance, data=request.data)
+			serializer = UserAddressSerializer(instance=instance, data=request.data)
+		else:
+			serializer = UserAddressSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -189,7 +192,7 @@ class UserAnalyzesViewSet(viewsets.ViewSet):
 			except UserAnalyzes.DoesNotExist, e:
 				return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		else:
-			queryset = UserAnalyzes.objects.filter(name=request.user.id)
+			queryset = UserAnalyzes.objects.filter(id=request.user.id)
 			serializer = UserAnalyzesSerializer(queryset, many=True)
 			data = {
 				'all_data': serializer.data,
@@ -224,7 +227,7 @@ class UserFilesViewSet(viewsets.ViewSet):
 			except UserFiles.DoesNotExist, e:
 				return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		else:
-			queryset = UserFiles.objects.filter(name=request.user.id)
+			queryset = UserFiles.objects.filter(id=request.user.id)
 			serializer = UserFilesSerializer(queryset, many=True)
 			data = {
 				'all_data': serializer.data,
