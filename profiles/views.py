@@ -200,12 +200,15 @@ class UserAnalyzesViewSet(viewsets.ViewSet):
 			return Response(data)
 
 	def create(self, request, id=None):
-		try:
-			instance = UserAnalyzes.objects.get(id=id)
-		except UserAnalyzes.DoesNotExist, e:
-			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		if id:
+			try:
+				instance = UserAnalyzes.objects.get(id=id)
+			except UserAnalyzes.DoesNotExist, e:
+				return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-		serializer = UserAnalyzesSerializer(instance=instance, data=request.data)
+			serializer = UserAnalyzesSerializer(instance=instance, data=request.data)
+		else:
+			serializer = UserAnalyzesSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -235,12 +238,15 @@ class UserFilesViewSet(viewsets.ViewSet):
 			return Response(data)
 
 	def create(self, request, id=None):
-		try:
-			instance = UserFiles.objects.get(id=id)
-		except UserFiles.DoesNotExist, e:
-			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		if id:
+			try:
+				instance = UserFiles.objects.get(id=id)
+			except UserFiles.DoesNotExist, e:
+				return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-		serializer = UserFilesSerializer(instance=instance, data=request.data)
+			serializer = UserFilesSerializer(instance=instance, data=request.data)
+		else:
+			serializer = UserFilesSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)

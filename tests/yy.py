@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from profiles.models import User
+from profiles.models import User, UserFiles
 from profiles.serializers import *
 from rest_framework.test import force_authenticate
 import json
@@ -104,7 +104,7 @@ class FileUploadTests(APITestCase):
         user.save()
         self.client.login(username='DabApps', password='pass')
         file = get_temporary_image()
-        url = '/api/account/user_details/'
+        url = '/api/account/user_files/'
         response = self.client.post(url, {'file': file, 'name_file':'some_file'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -137,10 +137,18 @@ class CreatingInstanceTests(APITestCase):
         user.set_password('pass')
         user.save()
         self.client.login(username='DabApps', password='pass')
+        url_files = reverse('list_user_files')
+        file = get_temporary_image()
+        data_files = {'file': file, 'date_of_add': '21.03.2015', 'name_file': 'user_file1'}
+        response_files = self.client.post(url_files, data_files)
+        self.assertEqual(response_files.status_code, status.HTTP_201_CREATED)
+        file_instance = UserFiles.objects.filter(id=response_files.data.get('id'))
+
+        print file_instance
         url = reverse('list_user_analyzes')
-        data = {'date_of_analyzes': '21.30.2015', 'title_analyzes': 'anal1', 'everything_data': {'1':'comment'}, 'relation_to_files': '1' }
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = {'date_of_analyzes': '21.30.2015', 'title_analyzes': 'anal1', 'everything_data': '', 'relation_to_user_files': file_instance}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
 

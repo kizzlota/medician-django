@@ -38,8 +38,9 @@ urlpatterns = [
     url(r'^api/account/user_analyzes/(?P<id>[0-9]+)/$', views.UserAnalyzesViewSet.as_view({'get': 'list', 'post': 'create'}), name='user_analyzes'),
     url(r'^api/account/user_analyzes/', views.UserAnalyzesViewSet.as_view({'get': 'list', 'post': 'create'}), name='list_user_analyzes'),
 
+	url(r'^api/account/user_files/', views.UserFilesViewSet.as_view({'get': 'list', 'post': 'create'}), name='list_user_files'),
     url(r'^api/account/user_files/(?P<id>[0-9]+)/$', views.UserFilesViewSet.as_view({'get': 'list', 'post': 'create'}), name='user_files'),
-    url(r'^api/account/user_files/', views.UserFilesViewSet.as_view({'get': 'list', 'post': 'create'}), name='user_files'),
+
 	# url(r'^api/account/add/user_address/(?P<id>[0-9]+)/$', views.UserAddressViewSet.as_view({'post': 'create', 'get': 'list'}), name='user_address_add')
     url(r'^tester/', 'profiles.views.tester', name='tester'),
     url(r'^tester2/', 'profiles.views.tester2', name='tester2'),

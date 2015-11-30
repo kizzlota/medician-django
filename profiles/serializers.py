@@ -64,7 +64,7 @@ class UserBioDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBioDetails
         fields = (
-            'avatar', 'name', 'second_name', 'surname', 'ident_code', 'sex', 'birthday', 'telephone_number', 'address',
+            'id', 'avatar', 'name', 'second_name', 'surname', 'ident_code', 'sex', 'birthday', 'telephone_number', 'address',
             'invalidity', 'blood_type', 'rh_factor', 'blood_transfusion', 'diabetes', 'infections_diseases', 'surgery',
             'allegric_history', 'medicinal_intolerance', 'vaccinations', 'previous_diagnosis', 'height', 'weight',
             'sport_life', 'bad_habits', 'special_nutrition', 'user_additional_comments', 'relation_to_user'
@@ -74,18 +74,22 @@ class UserBioDetailsSerializer(serializers.ModelSerializer):
 class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAddress
-        fields = ('phone', 'address', 'city', 'street', 'country')
+        fields = ('id', 'phone', 'address', 'city', 'street', 'country')
 
 
 class UserFilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFiles
-        fields = ('file', 'date_of_add', 'name_file')
+        fields = ('id', 'file', 'date_of_add', 'name_file')
 
 
 class UserAnalyzesSerializer(serializers.ModelSerializer):
-    relation_to_user_files = UserFilesSerializer(many=True,)
+    relation_to_files = UserFilesSerializer(many=True,)
+
+    def create(self, validated_data):
+        return UserAnalyzes.objects.create(**validated_data)
 
     class Meta:
         model = UserAnalyzes
-        fields = ('date_of_analyzes', 'title_analyzes', 'everything_data', 'relation_to_user_files')
+        fields = ('id', 'date_of_analyzes', 'title_analyzes', 'everything_data', 'relation_to_files')
+
