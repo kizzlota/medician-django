@@ -83,13 +83,23 @@ class UserFilesSerializer(serializers.ModelSerializer):
         fields = ('id', 'file', 'date_of_add', 'name_file')
 
 
+class JSONSerializerField(serializers.Field):
+    """ Serializer for JSONField -- required to make field writable"""
+    def to_internal_value(self, data):
+        return data
+
+    def to_representation(self, value):
+        return value
+
+
 class UserAnalyzesSerializer(serializers.ModelSerializer):
-    relation_to_files = UserFilesSerializer(many=True,)
+    #relation_to_user_files = UserFilesSerializer(many=True,)
+    everything_data = JSONSerializerField()
 
     def create(self, validated_data):
         return UserAnalyzes.objects.create(**validated_data)
 
     class Meta:
         model = UserAnalyzes
-        fields = ('id', 'date_of_analyzes', 'title_analyzes', 'everything_data', 'relation_to_files')
+        fields = ('id', 'date_of_analyzes', 'title_analyzes', 'everything_data', 'relation_to_user_files')
 

@@ -84,9 +84,9 @@ class AccountTests(APITestCase):
         user = get_user_model().objects.create_user(username='DabApps', email='test@test.com')
         user.set_password('pass')
         user.save()
+        self.client.login(username='DabApps', password='pass')
         user_bio = UserAddress.objects.create(address='Ternopil', phone='1234123')
         url1 = '/api/account/user_address/{0}/'.format(user_bio.id)
-        self.client.login(username='DabApps', password='pass')
         user_address = UserAddress.objects.create(phone='123', city='ternopil')
         user_address.save()
         data = {'phone': '12345', 'city': 'Ternopil'}
@@ -104,8 +104,8 @@ class FileUploadTests(APITestCase):
         user.save()
         self.client.login(username='DabApps', password='pass')
         file = get_temporary_image()
-        url = '/api/account/user_files/'
-        response = self.client.post(url, {'file': file, 'name_file':'some_file'})
+        url_prop = reverse('list_user_files')
+        response = self.client.post(url_prop, {'file': file, 'name_file':'some_file'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 

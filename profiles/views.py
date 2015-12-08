@@ -23,15 +23,15 @@ from rest_framework.parsers import JSONParser
 # from profiles.mailing import send_email
 # Create your views here.
 
-class JSONResponse(HttpResponse):
-	"""
-	An HttpResponse that renders its content into JSON.
-	"""
-
-	def __init__(self, data, **kwargs):
-		content = JSONRenderer().render(data)
-		kwargs['content_type'] = 'application/json'
-		super(JSONResponse, self).__init__(content, **kwargs)
+# class JSONResponse(HttpResponse):
+# 	"""
+# 	An HttpResponse that renders its content into JSON.
+# 	"""
+#
+# 	def __init__(self, data, **kwargs):
+# 		content = JSONRenderer().render(data)
+# 		kwargs['content_type'] = 'application/json'
+# 		super(JSONResponse, self).__init__(content, **kwargs)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -45,28 +45,22 @@ class UserViewSet(viewsets.ModelViewSet):
 class AccountViewSet(viewsets.ViewSet):
 	permission_classes = (AllowAny,)
 
-	# authentication_classes = (JSONWebTokenAuthentication, )
-
 	def create(self, request):
 
 		serializer = AccountSerializer(data=request.data)
 		if serializer.is_valid():
-
 			username = serializer.data['username']
 			email = serializer.data['email']
 			password = serializer.data['password']
 
 			# Creating an user entry
-
 			user = get_user_model().objects.create_user(username=username)
 			user.set_password(password)
 			user.email = email
 			user.save()
-
 			user1 = authenticate(username=username, password=password)
 			if user1 is not None:
 				login(request, user1)
-
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -175,8 +169,6 @@ class UserAddressViewSet(viewsets.ViewSet):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class UserAnalyzesViewSet(viewsets.ViewSet):
 	permission_classes = (IsAuthenticated,)
 
@@ -251,8 +243,6 @@ class UserFilesViewSet(viewsets.ViewSet):
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 def tester(request):

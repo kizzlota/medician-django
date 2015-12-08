@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'profiles',
     'rest_framework',
     'jquery',
+	'interrealation',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework import routers
 from profiles import views
+from interrealation import views as inter_view
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -41,7 +42,10 @@ urlpatterns = [
 	url(r'^api/account/user_files/', views.UserFilesViewSet.as_view({'get': 'list', 'post': 'create'}), name='list_user_files'),
     url(r'^api/account/user_files/(?P<id>[0-9]+)/$', views.UserFilesViewSet.as_view({'get': 'list', 'post': 'create'}), name='user_files'),
 
-	# url(r'^api/account/add/user_address/(?P<id>[0-9]+)/$', views.UserAddressViewSet.as_view({'post': 'create', 'get': 'list'}), name='user_address_add')
+
+    url(r'^api/quick_post/', inter_view.QuickPostViewSet.as_view({'get': 'list'}), name='quick_post'),
+
+
     url(r'^tester/', 'profiles.views.tester', name='tester'),
     url(r'^tester2/', 'profiles.views.tester2', name='tester2'),
     url(r'^tester3/', 'profiles.views.tester3', name='tester3'),
