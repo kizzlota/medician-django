@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
-from profiles.models import DocCategories
+from profiles.models import DocCategories, User
 import os
 import uuid
 
@@ -19,4 +19,5 @@ class QuickRequest(models.Model):
 	no_price = models.NullBooleanField(blank=True, null=True, verbose_name='set no price')
 	symptoms = models.TextField(max_length=500, blank=True, null=True, verbose_name='short description')
 	file_qr = models.FileField(blank=True, null=True, upload_to=get_file_path)
+	user_relation = models.ForeignKey(User)
 	doc_relation = models.ManyToManyField(DocCategories, blank=True, null=True, verbose_name='relation filed to Doc categories')

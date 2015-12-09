@@ -44,7 +44,8 @@ urlpatterns = [
 
 
     url(r'^api/quick_post/', inter_view.QuickPostViewSet.as_view({'get': 'list'}), name='quick_post'),
-
+	url(r'^api/quick_post/(?P<id>[0-9]+)/$', inter_view.QuickPostViewSet.as_view({'get': 'list', 'post': 'create'}),
+	    name='list_posts'),
 
     url(r'^tester/', 'profiles.views.tester', name='tester'),
     url(r'^tester2/', 'profiles.views.tester2', name='tester2'),
