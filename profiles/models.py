@@ -9,6 +9,7 @@ import os
 from django.conf import settings
 # Create your models here.
 
+
 class UserManager(BaseUserManager):
 	def create_user(self, username, email=None, password=None, **extra_fields):
 		now = timezone.now()
@@ -46,7 +47,6 @@ class UserAddress(models.Model):
 		return self.phone
 
 
-
 class UserFiles(models.Model):
 	file = models.FileField(blank=True, null=True, upload_to=get_file_path,
 	                        default="/static/img/defaultuserimage.jpeg")
@@ -61,7 +61,7 @@ class UserAnalyzes(models.Model):
 	date_of_analyzes = models.DateField(auto_now=True)
 	title_analyzes = models.TextField(blank=True, null=True)
 	everything_data = JSONField()
-	relation_to_files = models.ManyToManyField(UserFiles, blank=True, null=True, verbose_name='relation filed to UserFiles by m2m')
+	relation_to_files = models.ManyToManyField(UserFiles, blank=True, verbose_name='relation filed to UserFiles by m2m')
 
 	def relation_to_user_files(self):
 		return self.relation_to_files.all()
@@ -93,7 +93,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	user_bio = models.TextField(max_length=1200, blank=True)
 
 	user_details = models.ForeignKey(UserAddress, blank=True, null=True)
-	relation_to_user_analyzes = models.ManyToManyField(UserAnalyzes, blank=True, null=True)
+	relation_to_user_analyzes = models.ManyToManyField(UserAnalyzes, blank=True)
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email']

@@ -20,4 +20,4 @@ class QuickRequest(models.Model):
 	symptoms = models.TextField(max_length=500, blank=True, null=True, verbose_name='short description')
 	file_qr = models.FileField(blank=True, null=True, upload_to=get_file_path)
 	user_relation = models.ForeignKey(User)
-	doc_relation = models.ManyToManyField(DocCategories, blank=True, null=True, verbose_name='relation filed to Doc categories')
+	doc_relation = models.ManyToManyField(DocCategories, blank=True, verbose_name='relation filed to Doc categories')

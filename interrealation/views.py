@@ -22,8 +22,9 @@ class QuickPostViewSet(viewsets.ViewSet):
 	def list(self, request, id=None):
 		if request.user.is_staff:
 			if id:
+				print id + 'vvv'
 				try:
-					queryset = QuickRequest.objects.filter(id=id, user=request.user)
+					queryset = QuickRequest.objects.filter(id=id, user_relation=request.user)
 					return self.status_ok(queryset)
 
 				except QuickRequest.DoesNotExist, e:
@@ -40,29 +41,9 @@ class QuickPostViewSet(viewsets.ViewSet):
 				except QuickRequest.DoesNotExist, e:
 					return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				queryset = QuickRequest.objects.filter(user=request.user)
+				queryset = QuickRequest.objects.filter(user_relation=request.user)
 				return self.status_ok(queryset)
-	#
-	# def list(self, request, id=None):
-	# 	if request.user.is_staff:
-	# 		queryset = QuickRequest.objects.all()
-	# 		serializer = QuickRequestSerializer(queryset, many=True)
-	# 		data = {
-	# 			'all_data': serializer.data,
-	# 		}
-	# 		return Response(data, status=status.HTTP_200_OK)
-	#
-	# 	if id:
-	# 		try:
-	# 			queryset = QuickRequest.objects.filter(id=id)
-	# 			serializer = QuickRequestSerializer(queryset, many=True)
-	# 			data = {
-	# 				'all_data': serializer.data,
-	# 			}
-	# 			return Response(data, status=status.HTTP_200_OK)
-	# 		except QuickRequest.DoesNotExist, e:
-	# 			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-	#
+
 	def create(self, request, id=None):
 		if id:
 			try:

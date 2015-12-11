@@ -245,6 +245,10 @@ class UserFilesViewSet(viewsets.ViewSet):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def index(request):
+	return render(request, 'main/index.html')
+
+
 def tester(request):
 	return render(request, 'main/test.html')
 

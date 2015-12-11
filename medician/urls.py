@@ -25,8 +25,10 @@ router.register(r'users', views.UserViewSet)
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-   # url(r'^$', 'profiles.views.registration', name='registration'),
-    url(r'^', include(router.urls)),
+
+	url('', include('social.apps.django_app.urls', namespace='social')),
+
+    # url(r'^', include(router.urls)),
     url(r'^api/account/registration/', views.AccountViewSet.as_view({'post': 'create'}), name='account_viewset'),
     url(r'^api/account/login/', views.AccountLogin.as_view({'post': 'login'}), name='user_login'),
 
@@ -43,13 +45,15 @@ urlpatterns = [
     url(r'^api/account/user_files/(?P<id>[0-9]+)/$', views.UserFilesViewSet.as_view({'get': 'list', 'post': 'create'}), name='user_files'),
 
 
-    url(r'^api/quick_post/', inter_view.QuickPostViewSet.as_view({'get': 'list'}), name='quick_post'),
 	url(r'^api/quick_post/(?P<id>[0-9]+)/$', inter_view.QuickPostViewSet.as_view({'get': 'list', 'post': 'create'}),
 	    name='list_posts'),
+	url(r'^api/quick_post/', inter_view.QuickPostViewSet.as_view({'get': 'list', 'post': 'create'}), name='quick_post'),
 
-    url(r'^tester/', 'profiles.views.tester', name='tester'),
-    url(r'^tester2/', 'profiles.views.tester2', name='tester2'),
-    url(r'^tester3/', 'profiles.views.tester3', name='tester3'),
+    url(r'^tester/', views.tester, name='tester'),
+    url(r'^tester2/', views.tester2, name='tester2'),
+    url(r'^tester3/', views.tester3, name='tester3'),
+
+	url(r'^$', views.index, name='index'),
 
 
 ]

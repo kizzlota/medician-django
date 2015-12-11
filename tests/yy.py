@@ -143,18 +143,8 @@ class CreatingInstanceTests(APITestCase):
         response_files = self.client.post(url_files, data_files)
         self.assertEqual(response_files.status_code, status.HTTP_201_CREATED)
         file_instance = UserFiles.objects.filter(id=response_files.data.get('id'))
-
-        print file_instance
         url = reverse('list_user_analyzes')
         data = {'date_of_analyzes': '21.30.2015', 'title_analyzes': 'anal1', 'everything_data': '', 'relation_to_user_files': file_instance}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-
-
-    # def test_if_form_fails_on_text_file(self):
-    #     file = get_temporary_text_file()
-    #     response = self.client.post(reverse('user_files'), {'image': file})
-    #     self.assertEqual(200, response.status_code)
-    #     error_message = 'Upload a valid image. The file you uploaded was either not an image or a corrupted image.'
-    #     self.assertFormError(response, 'form', 'image', error_message)
